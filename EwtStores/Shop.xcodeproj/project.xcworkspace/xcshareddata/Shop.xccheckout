@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>67CCAE53-509C-43D1-B20B-149A2050503B</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Shop</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>36C17A7A7520FB739033EC6291274A85A3AA2056</key>
+		<string>172.17.1.48:ewt-shop-ios.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>EwtStores/Shop.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>36C17A7A7520FB739033EC6291274A85A3AA2056</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>172.17.1.48:ewt-shop-ios.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>36C17A7A7520FB739033EC6291274A85A3AA2056</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>36C17A7A7520FB739033EC6291274A85A3AA2056</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ewt-shop-ios</string>
+		</dict>
+	</array>
+</dict>
+</plist>
