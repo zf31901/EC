@@ -96,7 +96,6 @@
     
     [self resetMainTableView];
     
-    actDetailVC = [ActivityDetailViewController shareInstance];
 }
 
 - (void)resetMainTableView
@@ -146,6 +145,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     ActivityObj *currentObj = (ActivityObj *)self.activityArr[indexPath.row];
+    actDetailVC = [ActivityDetailViewController shareInstance];
     [actDetailVC setActivtyDetailUrl:currentObj.activityLinkUrl];
     [actDetailVC setActTitle:currentObj.activityName];
     [self.navigationController pushViewController:actDetailVC animated:YES];

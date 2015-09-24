@@ -158,8 +158,9 @@
         return NO;
     }else{
         //点击网页上的某个商品
-        // 从http://bh.ewt.cc/showitem/19675.htm 截取 showitem/19675.htm
-        NSArray *arr = [urlString componentsSeparatedByString:@"http://bh.ewt.cc/"];
+        // 从http://ec.aixinland.cn/showitem/19675.htm 截取 showitem/19675.htm
+        
+        NSArray *arr = [urlString componentsSeparatedByString:@"http://ec.aixinland.cn/showitem"];
         
         if (arr.count > 1) {
             NSString *productIdInfo = arr[1];

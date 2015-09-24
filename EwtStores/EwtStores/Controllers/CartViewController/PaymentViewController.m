@@ -105,7 +105,7 @@ extern SettleViewController *settleVC;
     [dic setObject:user.clientkey   forKey:@"clientkey"];
     [dic setObject:user.im          forKey:@"userlogin"];
   
-    if([paymentArr[currentIndex] isEqualToString:@"银联手机支付"]){
+    if([paymentArr[currentIndex] isEqualToString:@"支付宝"]){
         [dic setObject:@"11"   forKey:@"UDPayType"];  //支付方式
     }else{
         [dic setObject:@"1"   forKey:@"UDPayType"];  //支付方式

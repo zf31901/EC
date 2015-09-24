@@ -10,8 +10,7 @@
 #import "CartViewController/CartViewController.h"
 #import "UnpayViewController.h"
 
-#import "UPPayPluginDelegate.h"
-#import "UPPayPlugin.h"
+
 #import "HTTPRequest.h"
 
 #import "UMSocialSnsService.h"
@@ -19,7 +18,7 @@
 
 extern CartViewController *cartVC;
 
-@interface UUPViewController ()  <UPPayPluginDelegate,UMSocialUIDelegate>
+@interface UUPViewController ()  <UMSocialUIDelegate>
 
 @end
 

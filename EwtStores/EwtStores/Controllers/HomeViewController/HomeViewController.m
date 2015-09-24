@@ -28,7 +28,7 @@
 #import "EGOCache.h"
 #import "UMSocialSnsService.h"
 #import "UMSocialSnsPlatformManager.h"
-
+#import "UserObj.h"
 #import "ActivityObj.h"
 #import "ProductObj.h"
 #import "BrandsObj.h"
@@ -113,7 +113,8 @@ extern SelfViewController *selfVC;
     if(VCArr.count >= 3){
         UINavigationController *cartVC = VCArr[2];
         NSString *cart_product_num = [GlobalMethod getObjectForKey:CART_PRODUCT_COUNT];
-        if([cart_product_num integerValue] == 0){
+        UserObj *user = [GlobalMethod getObjectForKey:USEROBJECT];
+        if([cart_product_num integerValue] == 0 || !user.isLogin){
             cartVC.tabBarItem.badgeValue = nil;
         }else{
             cartVC.tabBarItem.badgeValue = cart_product_num;
@@ -440,6 +441,12 @@ extern SelfViewController *selfVC;
         [self.bannerSView setContentSize:CGSizeMake(Main_Size.width * (2+bannerArr.count), BannerView_Height)];
     }
     
+    if(bannerArr.count == 1){
+        self.bannerSView.scrollEnabled = NO;
+    }else{
+        self.bannerSView.scrollEnabled = YES;
+    }
+    
     //banner个数为0，可能是网络请求失败，使用上次保存的数据显示
     if(bannerArr.count == 0){
         
@@ -685,10 +692,10 @@ extern SelfViewController *selfVC;
         [brandsArr removeLastObject];
     }*/
     
-    //如果品牌数不是2的倍数，则优化成2的倍数
-    if(brandsArr.count % 2 == 1){
-        [brandsArr removeLastObject];
-    }
+//    //如果品牌数不是2的倍数，则优化成2的倍数
+//    if(brandsArr.count % 2 == 1){
+//        [brandsArr removeLastObject];
+//    }
     
     //品牌专区最多显示8个
     if (brandsArr.count > 8) {
@@ -1141,6 +1148,9 @@ extern SelfViewController *selfVC;
 
 - (void)refreshView
 {
+    self.searchDataArr  = [NSMutableArray arrayWithCapacity:10];
+    bannerArr           = [NSMutableArray arrayWithCapacity:10];
+    brandsArr           = [NSMutableArray arrayWithCapacity:10];
     [self getDataSourceByNetwork];
     [self finishReloadingData];
     [self getFirstDataSource];

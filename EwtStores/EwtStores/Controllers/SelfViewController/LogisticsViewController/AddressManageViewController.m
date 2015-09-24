@@ -188,7 +188,7 @@
     [self showHUDInView:self.view WithText:NETWORKLOADING];
     HTTPRequest *hq = [HTTPRequest shareInstance];
     BLOCK_SELF(AddressManageViewController);
-    NSDictionary *dic = @{@"userlogin" : user.im?user.im:@""};
+    NSDictionary *dic = @{@"userlogin" : user.im?user.im:@"",@"productid":@"1"};
     [hq GETURLString:ADDRESS_LIST userCache:NO parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObj) {
         NSDictionary *rqDic = (NSDictionary *)responseObj;
         if([rqDic[HTTP_STATE] boolValue]){
@@ -289,7 +289,7 @@
     }
     
     static NSString *indifiter = @"address_cell";
-    AddressCell *cell = [tableView dequeueReusableCellWithIdentifier:indifiter];
+    AddressCell *cell ;//= [tableView dequeueReusableCellWithIdentifier:indifiter];
     if(!cell){
         cell = [[AddressCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:indifiter];
     }
@@ -394,10 +394,12 @@
     [self.navigationController pushViewController:addressDVC animated:YES];
 }
 
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 @end

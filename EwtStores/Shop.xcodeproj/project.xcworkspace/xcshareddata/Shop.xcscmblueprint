@@ -1,0 +1,49 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "C79C7800972C4623C69BD99655357F712EFA9EB0",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+    "0fba8690-e19e-4021-b222-19e5c3736753++5321" : {
+
+    },
+    "2c5c4d3e-3177-bc46-8014-71462023ba7a++4992" : {
+
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "C79C7800972C4623C69BD99655357F712EFA9EB0" : 0,
+    "2c5c4d3e-3177-bc46-8014-71462023ba7a++4992" : 0,
+    "36C17A7A7520FB739033EC6291274A85A3AA2056" : 0,
+    "0fba8690-e19e-4021-b222-19e5c3736753++5321" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "67CCAE53-509C-43D1-B20B-149A2050503B",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "C79C7800972C4623C69BD99655357F712EFA9EB0" : "ECapp",
+    "2c5c4d3e-3177-bc46-8014-71462023ba7a++4992" : "ECapp\/EwtStores\/EwtStores\/TripartiteLib\/FMDB\/",
+    "36C17A7A7520FB739033EC6291274A85A3AA2056" : "ewt-shop-ios",
+    "0fba8690-e19e-4021-b222-19e5c3736753++5321" : "ECapp\/EwtStores\/EwtStores\/TripartiteLib\/AsyncSocket\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Shop",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "EwtStores\/Shop.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "svn:\/\/192.168.0.109",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "0fba8690-e19e-4021-b222-19e5c3736753++5321"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "svn:\/\/192.168.1.71\/systemmanage",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2c5c4d3e-3177-bc46-8014-71462023ba7a++4992"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "172.17.1.48:ewt-shop-ios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "36C17A7A7520FB739033EC6291274A85A3AA2056"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "172.17.1.17:ECapp.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C79C7800972C4623C69BD99655357F712EFA9EB0"
+    }
+  ]
+}

@@ -505,7 +505,8 @@ extern CartViewController *cartVC;
     [cartIV addGestureRecognizer:tap];
     
     _numLb = [GlobalMethod BuildLableWithFrame:cartIV.frame withFont:[UIFont systemFontOfSize:12] withText:nil];
-    if([[GlobalMethod getObjectForKey:CART_PRODUCT_COUNT] isKindOfClass:[NSNull class]]){
+    UserObj *obj = [GlobalMethod getObjectForKey:USEROBJECT];
+    if([[GlobalMethod getObjectForKey:CART_PRODUCT_COUNT] isKindOfClass:[NSNull class]] || !obj.isLogin){
         [_numLb setText:@"0"];
     }else{
         [_numLb setText:[GlobalMethod getObjectForKey:CART_PRODUCT_COUNT]];
@@ -541,7 +542,7 @@ extern CartViewController *cartVC;
     
     UserObj *user = [GlobalMethod getObjectForKey:USEROBJECT];
     
-    if (user.im == nil || [user.im isEqualToString:@""]) {
+    if (user.im == nil || [user.im isEqualToString:@""] || !user.isLogin) {
         
         [self showHUDInView:self.view WithText:@"请登录后即可加入购物车"];
         [self performSelector:@selector(comeToLogin) withObject:nil afterDelay:1];
@@ -767,18 +768,22 @@ extern CartViewController *cartVC;
             [proNameLb setText:self.obj.name?self.obj.name:@""];
             [cell.contentView addSubview:proNameLb];
             //商品价格
-            proSalePriceLb = [GlobalMethod BuildLableWithFrame:CGRectMake(10, proNameLb.height+10, 80, 30)
-                                                               withFont:[UIFont boldSystemFontOfSize:20]
-                                                               withText:nil];
+            NSString *salePrice = [NSString stringWithFormat:@"￥%@", self.obj.salePrice];
+            CGRect  salePriceRect = [salePrice boundingRectWithSize:CGSizeMake(Main_Size.width/2, 30) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObject:[UIFont boldSystemFontOfSize:20] forKey:NSFontAttributeName] context:nil];
+            proSalePriceLb = [GlobalMethod BuildLableWithFrame:CGRectMake(10, proNameLb.height+10, salePriceRect.size.width, 30)
+                                                      withFont:[UIFont boldSystemFontOfSize:20]
+                                                      withText:nil];
             [proSalePriceLb setTextColor:RGB(197, 0, 0)];
-            [proSalePriceLb setText:[NSString stringWithFormat:@"￥%@", self.obj.salePrice]];
+            [proSalePriceLb setText:salePrice];
             [cell.contentView addSubview:proSalePriceLb];
             //商品原价
-            UILabel *proOldPriceLb = [GlobalMethod BuildLableWithFrame:CGRectMake(proSalePriceLb.right-5, proNameLb.height+20, 50, 15)
+            NSString *oldPrice = [NSString stringWithFormat:@"￥%.2f", [self.obj.oldPrice floatValue]];
+            CGRect  oldPriceRect = [oldPrice boundingRectWithSize:CGSizeMake(Main_Size.width/2, 15) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:12] forKey:NSFontAttributeName] context:nil];
+            UILabel *proOldPriceLb = [GlobalMethod BuildLableWithFrame:CGRectMake(proSalePriceLb.right+5, proNameLb.height+20, oldPriceRect.size.width, 15)
                                                               withFont:[UIFont systemFontOfSize:12]
                                                               withText:nil];
             [proOldPriceLb setTextColor:RGBS(153)];
-            [proOldPriceLb setText:[NSString stringWithFormat:@"￥%.2f", [self.obj.oldPrice floatValue]]];
+            [proOldPriceLb setText:oldPrice];
             [cell.contentView addSubview:proOldPriceLb];
             UILabel *oldLineLb = [GlobalMethod BuildLableWithFrame:CGRectMake(proOldPriceLb.left, proOldPriceLb.center.y, proOldPriceLb.width, 0.5)
                                                           withFont:nil

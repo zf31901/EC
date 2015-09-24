@@ -88,7 +88,7 @@ NSString *TMP_UPLOAD_IMG_PATH=@"";
         }
         
         [imLb setHidden:NO];
-        [imLb setText:[NSString stringWithFormat:@"IM号：%@",user.im]];
+        [imLb setText:[NSString stringWithFormat:@"爱心号：%@",user.im]];
     }else{
         [headImageView setImage:[UIImage imageNamed:@"profile-no-avatar-icon"]];
         [headNameLb setText:@"点击此处登录"];
@@ -101,7 +101,7 @@ NSString *TMP_UPLOAD_IMG_PATH=@"";
     if(VCArr.count >= 3){
         UINavigationController *cartVC = VCArr[2];
         NSString *cart_product_num = [GlobalMethod getObjectForKey:CART_PRODUCT_COUNT];
-        if([cart_product_num integerValue] == 0){
+        if([cart_product_num integerValue] == 0 || !user.isLogin){
             cartVC.tabBarItem.badgeValue = nil;
         }else{
             cartVC.tabBarItem.badgeValue = cart_product_num;
@@ -219,7 +219,7 @@ NSString *TMP_UPLOAD_IMG_PATH=@"";
     
     imLb = [GlobalMethod BuildLableWithFrame:CGRectMake(50, headNameLb.bottom, 220, 20)
                                     withFont:[UIFont systemFontOfSize:16]
-                                    withText:@"IM号："];
+                                    withText:@"爱心号："];
     [imLb setTextAlignment:NSTextAlignmentCenter];
     [imLb setTextColor:[UIColor whiteColor]];
     [imLb setHidden:YES];
@@ -449,7 +449,7 @@ NSString *TMP_UPLOAD_IMG_PATH=@"";
             
             UserObj *user = [GlobalMethod getObjectForKey:USEROBJECT];
             
-            if(user.im == nil || [user.im isEqualToString:@""]){
+            if(user.im == nil || [user.im isEqualToString:@""]|| !user.isLogin){
                 LoginInViewController *loginViewC = [[LoginInViewController alloc] init];
                 UINavigationController *loginNavC = [[UINavigationController alloc] initWithRootViewController:loginViewC];
                 [loginNavC setNavigationBarHidden:YES];
@@ -470,7 +470,7 @@ NSString *TMP_UPLOAD_IMG_PATH=@"";
             
             UserObj *user = [GlobalMethod getObjectForKey:USEROBJECT];
             
-            if(user.im == nil || [user.im isEqualToString:@""]){
+            if(user.im == nil || [user.im isEqualToString:@""] || !user.isLogin){
                 LoginInViewController *loginViewC = [[LoginInViewController alloc] init];
                 UINavigationController *loginNavC = [[UINavigationController alloc] initWithRootViewController:loginViewC];
                 [loginNavC setNavigationBarHidden:YES];
@@ -589,6 +589,10 @@ NSString *TMP_UPLOAD_IMG_PATH=@"";
     }*/
     NSData *imageData = UIImageJPEGRepresentation(editImg, 0.5);
 
+    if (imageData.length > 100000) {
+        imageData = UIImageJPEGRepresentation(editImg, 0.1);
+    }
+    
     BLOCK_SELF(SelfViewController);
     HTTPRequest *hq = [HTTPRequest shareInstance_myapi];
     UserObj *user = [GlobalMethod getObjectForKey:USEROBJECT];
@@ -596,24 +600,24 @@ NSString *TMP_UPLOAD_IMG_PATH=@"";
     //先将pickerView隐藏，否则会请求失败
     [self dismissViewControllerAnimated:YES completion:Nil];
     [self showHUDInView:block_self.view WithText:@"头像上传中"];
-    
-    [hq POSTURLString:USER_UPDATEFILE parameters:parameters imageData:imageData completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-        
+
+    [hq POSTURLString:USER_UPDATEFILE parameters:parameters imageData:imageData success:^(AFHTTPRequestOperation *operation, id responseObject) {
         [self hideHUDInView:block_self.view];
-        
-        NSDictionary *rqDic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+        NSDictionary *rqDic = (NSDictionary *)responseObject;
         if([rqDic[HTTP_STATE] boolValue]){
             NSDictionary *dic = (NSDictionary *)[rqDic[HTTP_DATA] objectFromJSONString];
             DLog(@"fileurl=%@",dic[@"fileurl"]);
             [user setHeadPic:dic[@"fileurl"]];
             [GlobalMethod saveObject:user withKey:USEROBJECT];
             [headImageView setImage:[RequestPostUploadHelper circleImage:editImg withParam:0]];
-            //[headImageView setImage:editImg];
         }else{
             NSLog(@"errorMsg: %@:%@",rqDic[HTTP_ERRCODE],rqDic[HTTP_MSG]);
-            [self showHUDInView:block_self.view WithText:[NSString stringWithFormat:@"%@:%@",rqDic[HTTP_ERRCODE],rqDic[HTTP_MSG]] andDelay:LOADING_TIME];
+            [self showHUDInView:block_self.view WithText:@"上传失败" andDelay:LOADING_TIME];
         }
-        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@",[error description]);
+        [self hideHUDInView:block_self.view];
+        [self showHUDInView:block_self.view WithText:@"上传失败" andDelay:LOADING_TIME];
     }];
 }
 

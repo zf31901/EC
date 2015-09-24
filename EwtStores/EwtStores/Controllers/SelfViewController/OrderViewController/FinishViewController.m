@@ -158,6 +158,7 @@
                     [proObj setNumber:proDic[@"Quantity"]];
                     [proObj setSalePrice:proDic[@"Price"]];
                     [proObj setImgUrl:[NSURL URLWithString:proDic[@"Pic"]]];
+                    [proObj setProductId:proDic[@"ProductId"]];
                     [tempArr addObject:proObj];
                 }
                 [obj setProducts:tempArr];

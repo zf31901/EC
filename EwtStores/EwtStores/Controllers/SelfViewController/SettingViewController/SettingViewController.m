@@ -49,7 +49,7 @@
     dataArr = [[NSMutableArray alloc] initWithCapacity:3];
     NSArray *arr1 = [NSArray arrayWithObjects:@"清除缓存",@"省流量",nil];
     NSArray *arr2 = [NSArray arrayWithObjects:@"意见反馈",@"帮助中心",nil];
-    NSArray *arr3 = [NSArray arrayWithObjects:@"检查更新",@"关于",@"去APPSTORE评分",nil];
+    NSArray *arr3 = [NSArray arrayWithObjects:@"关于",@"去APPSTORE评分",nil];
     [dataArr addObject:arr1];
     [dataArr addObject:arr2];
     [dataArr addObject:arr3];
@@ -153,7 +153,7 @@
 {
     if(section == 2)
     {
-        return 64;
+        return 104;
     }
     
     return 0;
@@ -172,14 +172,20 @@
 {
     if(section == 2)
     {
-        UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Size.width, 64)];
-        UIButton *exitBtn = [GlobalMethod BuildButtonWithFrame:CGRectMake(0, 10, Main_Size.width-17, 44)
+        UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Size.width, 104)];
+        UIButton *exitBtn = [GlobalMethod BuildButtonWithFrame:CGRectMake(0, 50, Main_Size.width-17, 44)
                                                      andOffImg:@"regist_next_off"
                                                       andOnImg:@"regist_next_on"
                                                      withTitle:@"退出登录"];
         [exitBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [exitBtn addTarget:self action:@selector(quitAccount) forControlEvents:UIControlEventTouchUpInside];
         [bgView addSubview:exitBtn];
+        UserObj *user = [GlobalMethod getObjectForKey:USEROBJECT];
+        if (user.isLogin) {
+            bgView.hidden = NO;
+        }else{
+            bgView.hidden = YES;
+        }
         return bgView;
     }
     
@@ -213,12 +219,12 @@
     }
     
     if(indexPath.section == 2){
-        if(indexPath.row == 1){  //关于
+        if(indexPath.row == 0){  //关于
             [self.navigationController pushViewController:[AboutUsViewController shareInstance] animated:YES];
         }else if (indexPath.row == 2){ //评分
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/id825481902"]];
+            //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/id×××××××"]];
         }else{       //检查更新
-            
+            return;
             [self showHUDInView:self.view WithText:NETWORKLOADING];
             [[HTTPRequest shareInstance] GETURLString:CHECK_SYSTEMVERSON userCache:NO parameters:@{@"appid":@"1"} success:^(AFHTTPRequestOperation *operation, id responseObj) {
                 NSDictionary *rqDic = (NSDictionary *)responseObj;
@@ -275,7 +281,7 @@
     
     if(alertView.tag == 2){
         if(alertView.cancelButtonIndex != buttonIndex){
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://itunes.apple.com/app/id825481902"]];
+            //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://itunes.apple.com/app/id×××"]];
         }
         
         return ;

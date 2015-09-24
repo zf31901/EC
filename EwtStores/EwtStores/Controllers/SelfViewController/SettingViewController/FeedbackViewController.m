@@ -7,7 +7,7 @@
 //
 
 #import "FeedbackViewController.h"
-
+#import "UserObj.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface FeedbackViewController () <UITextViewDelegate>
@@ -80,8 +80,14 @@
     }
     
     [self showHUDInView:self.view WithText:NETWORKLOADING];
-    
-    NSDictionary *dic = @{@"Title":@"爱心天地问题" , @"Content":feedbackTV.text};
+    UserObj *user = [GlobalMethod getObjectForKey:USEROBJECT];
+    NSDictionary *dic;
+    if (user.isLogin) {
+        dic = @{@"UserLogin":user.im,@"Title":@"爱心天地问题" , @"Content":feedbackTV.text};
+    }else{
+        dic = @{@"Title":@"爱心天地问题" , @"Content":feedbackTV.text};
+    }
+
     HTTPRequest *hq = [HTTPRequest shareInstance_myapi];
     [hq POSTURLString:FEEDBACK parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
@@ -141,13 +147,6 @@
     
     return YES;
     
-}
-
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

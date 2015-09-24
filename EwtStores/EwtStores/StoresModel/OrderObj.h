@@ -30,6 +30,7 @@
 @property (nonatomic, strong) NSString  *invoiceHead;    //发票抬头
 @property (nonatomic, strong) NSString  *invoinceContent;    //发票内容
 @property (nonatomic, strong) NSString  *remark;    //备注
+@property (nonatomic, strong) NSString  *productNameList;   //订单产品名称列表
 
 //退换货
 @property (nonatomic, assign) int       repType;    //返修类型:返修（1），退货（2），换货（3）

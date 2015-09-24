@@ -137,6 +137,7 @@
                 [obj setInvoiceHead:dic[@"UO_InvoiceHead"]];
                 [obj setInvoinceContent:dic[@"UO_InvoinceContent"]];
                 [obj setRemark:dic[@"UO_Remark"]];
+                [obj setProductNameList:dic[@"UO_ProductNameList"]];
                 
                 //给订单添加商品
                 //[obj setProducts:[self addProducts:dic[@"UO_OrderSerial"]]];
@@ -415,6 +416,7 @@
 
 - (void)comeToHome
 {
+    [self.navigationController popToRootViewControllerAnimated:NO];
     [MYAPPDELEGATE.tabBarC setSelectedIndex:0];
 }
 

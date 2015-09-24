@@ -42,6 +42,19 @@
     [self setFooterView];
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.mainTableView.delegate = self;
+    self.mainTableView.dataSource = self;
+
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    self.mainTableView.delegate = nil;
+    self.mainTableView.dataSource = nil;
+}
+
 //建立headerView
 - (void)buildHeaderView
 {

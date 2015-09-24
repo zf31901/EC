@@ -154,7 +154,7 @@ typedef NS_ENUM(NSInteger, DELETE_PRODUCT_MODE){
     [self showHUDInView:self.tabBarController.view WithText:NETWORKLOADING];
     HTTPRequest *hq = [HTTPRequest shareInstance];
     BLOCK_SELF(CartViewController);
-    NSDictionary *dic = @{@"userlogin" : user.im?user.im:@""};
+    NSDictionary *dic = @{@"userlogin" :user.isLogin? (user.im?user.im:@""):@""};
     [hq GETURLString:USER_SHOPCART_LIST userCache:NO parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObj) {
         NSDictionary *rqDic = (NSDictionary *)responseObj;
         if([rqDic[HTTP_STATE] boolValue]){

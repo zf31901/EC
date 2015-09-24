@@ -133,6 +133,12 @@
 - (void)authCodeAction:(UIButton *)nextBtn
 {
     DLog(@"注册验证码，下一步");
+    if(authCodeTF.text == nil || [authCodeTF.text isEqualToString:@""])
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"验证码不能为空" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
     
     BLOCK_SELF(RegisterAuthCodeViewController);
     HTTPRequest *hq = [HTTPRequest shareInstance_myapi];
@@ -174,6 +180,8 @@
             if([rqDic[HTTP_STATE] boolValue]){
                 NSLog(@"%@",rqDic);
                 NSDictionary *dataDic = (NSDictionary *)[rqDic[HTTP_DATA] objectFromJSONString];
+                if ([dataDic[@"result"] boolValue]) {
+                
                 NSString *username = dataDic[@"userlogin"];
                 NSString *clientkey = dataDic[@"clientkey"];
                 NSDictionary *param = @{@"u":username, @"clientkey": clientkey};
@@ -239,7 +247,9 @@
                     [self hideHUDInView:block_self.view];
                     [self showHUDInView:block_self.view WithText:NETWORKERROR andDelay:LOADING_TIME];
                 }];
-
+                }else{
+                    [self showHUDInView:self.view WithText:@"请求失败" andDelay:LOADING_TIME];
+                }
                 
             }else{
                 NSLog(@"errorMsg: %@",rqDic[HTTP_MSG]);
@@ -293,7 +303,11 @@
     [hq GETURLString:REGISTER_SEND_PHONE userCache:NO parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary *rqDic = (NSDictionary *)responseObject;
         if([rqDic[HTTP_STATE] boolValue]){
+            NSArray *dataArr = (NSArray *)[rqDic[HTTP_DATA] objectFromJSONString];
+            NSDictionary *dic = (NSDictionary *)dataArr;
+            DLog(@"sessionkey:%@",dic[@"sessionkey"]);
 
+            _sessionkey = dic[@"sessionkey"];
         }else{
             NSLog(@"errorMsg: %@:%@",rqDic[HTTP_ERRCODE],rqDic[HTTP_MSG]);
             [self showHUDInView:block_self.view WithText:rqDic[HTTP_MSG] andDelay:LOADING_TIME];
@@ -328,6 +342,9 @@
 - (void)ShouldReseedAuthCode
 {
     _secondNum --;
+    if(_secondNum < 0){
+        _secondNum = 0;
+    }
     DLog(@"还有 %d 秒就能重新获取验证码",_secondNum);
     
     [reSendBtn setEnabled:YES];

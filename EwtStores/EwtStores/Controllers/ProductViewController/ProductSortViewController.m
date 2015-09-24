@@ -100,6 +100,12 @@ static float rightView_width = 220;
     [MobClick event:SPLB];
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    self.mainTableView.delegate = self;
+    self.mainTableView.delegate = self;
+}
+
 - (void)loadDataSource
 {
     isShowBanderTView = NO;
@@ -174,7 +180,7 @@ static float rightView_width = 220;
         [dic setObject:mString forKey:@"brand"];
     }
 
-    [hq GETURLString:SORT_PRODUCT_LIST parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObj) {
+    [hq GETURLString:SORT_PRODUCT_LIST userCache:NO parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObj) {
         NSDictionary *rqDic = (NSDictionary *)responseObj;
         if([rqDic[HTTP_STATE] boolValue]){
             NSDictionary *dataDic = (NSDictionary *)[rqDic[HTTP_DATA] objectFromJSONString];
@@ -257,7 +263,8 @@ static float rightView_width = 220;
         }else{
             NSLog(@"errorMsg: %@",rqDic[HTTP_MSG]);
             [self hideHUDInView:block_self.view];
-            [self showHUDInView:block_self.view WithText:rqDic[HTTP_MSG] andDelay:LOADING_TIME];
+            //[self showHUDInView:block_self.view WithText:rqDic[HTTP_MSG] andDelay:LOADING_TIME];
+            [self.mainTableView reloadData];
             [self finishReloadingData];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

@@ -12,22 +12,34 @@
 	<dict>
 		<key>36C17A7A7520FB739033EC6291274A85A3AA2056</key>
 		<string>172.17.1.48:ewt-shop-ios.git</string>
+		<key>C79C7800972C4623C69BD99655357F712EFA9EB0</key>
+		<string>172.17.1.17:ECapp.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>EwtStores/Shop.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>36C17A7A7520FB739033EC6291274A85A3AA2056</key>
+		<string>../../../../ewt-shop-ios</string>
+		<key>C79C7800972C4623C69BD99655357F712EFA9EB0</key>
 		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>172.17.1.48:ewt-shop-ios.git</string>
+	<string>172.17.1.17:ECapp.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>36C17A7A7520FB739033EC6291274A85A3AA2056</string>
+	<string>C79C7800972C4623C69BD99655357F712EFA9EB0</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>C79C7800972C4623C69BD99655357F712EFA9EB0</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ECapp</string>
+		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>

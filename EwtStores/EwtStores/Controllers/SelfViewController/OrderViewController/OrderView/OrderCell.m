@@ -128,6 +128,7 @@
     } else {
         [self.orderState         setText:[statusDic objectForKey:[NSString stringWithFormat:@"status_%d",obj.status]]];
     }
+    NSLog(@"%@",self.orderState.text);
 }
 
 - (void)removeProduct:(UIButton *)bt

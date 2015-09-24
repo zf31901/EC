@@ -132,7 +132,7 @@
                 
                 OrderObj *obj = [OrderObj shareInstance];
                 [obj setOrderId:dic[@"UO_OrderSerial"]];
-                [obj setOrderTime:dic[@"UO_SuccessTime"]];
+                [obj setOrderTime:dic[@"UO_CreateDate"]];
                 [obj setDeliverType:[dic[@"UO_DeliveryType"] intValue]];
                 [obj setStatus:[dic[@"UO_Status"] intValue]];
                 [obj setRecName:dic[@"UO_RecName"]];

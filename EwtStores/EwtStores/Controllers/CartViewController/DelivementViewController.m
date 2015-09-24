@@ -42,7 +42,11 @@ extern SettleViewController *settleVC;
     [self hiddenRightBtn];
     
     dataArr1 = [NSMutableArray arrayWithObjects:@"配送方式",@"运费",nil];
-    dataArr2 = [NSMutableArray arrayWithObjects:@"快递",@"免运费",nil];
+    NSString *freightStr = [NSString stringWithFormat:@"+ ¥ %0.2f元",self.freight];
+    if (self.freight == 0) {
+        freightStr= @"免运费";
+    }
+    dataArr2 = [NSMutableArray arrayWithObjects:@"快递",freightStr,nil];
     
     tView = [[UITableView alloc] initWithFrame:CGRectMake(0, [GlobalMethod AdapterIOS6_7ByIOS6Float:Navbar_Height + 20], Main_Size.width, 87) style:UITableViewStylePlain];
     [tView setDelegate:self];

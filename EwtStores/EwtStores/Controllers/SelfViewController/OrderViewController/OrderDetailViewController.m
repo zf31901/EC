@@ -19,6 +19,7 @@
 
 #import "HTTPRequest.h"
 #import <QuartzCore/QuartzCore.h>
+#import "AlipayViewController.h"
 
 extern SelfViewController *selfVC;
 
@@ -502,10 +503,19 @@ extern SelfViewController *selfVC;
             NSDictionary *dic = (NSDictionary *)[rqDic[HTTP_DATA] objectFromJSONString];
             
             //跳至银联支付
-            UUPViewController *uupVC = [UUPViewController shareInstance];
-            [uupVC setTNString:dic[@"payserial"]];
-            [uupVC setOrderSerial:_order.orderId];
-            [self.navigationController pushViewController:uupVC animated:NO];
+//            UUPViewController *uupVC = [UUPViewController shareInstance];
+//            [uupVC setTNString:dic[@"payserial"]];
+//            [uupVC setOrderSerial:_order.orderId];
+//            [self.navigationController pushViewController:uupVC animated:NO];
+            
+            //支付宝
+            AlipayViewController *alipayVC = [[AlipayViewController alloc] init];
+            alipayVC.alipayOrder.tradeNO = _order.orderId;
+            alipayVC.alipayOrder.productName = _order.productNameList;
+            alipayVC.alipayOrder.productDescription = @"爱心天地商品"; //商品描述
+            alipayVC.alipayOrder.amount = [NSString stringWithFormat:@"%.2f",_order.totalPayAmount]; //商品价格
+            [self.navigationController pushViewController:alipayVC animated:YES];
+            
         }else{
             NSLog(@"errorMsg: %@",rqDic[HTTP_MSG]);
             [self hideHUDInView:block_self.view];
@@ -589,13 +599,17 @@ extern SelfViewController *selfVC;
                 [self showHUDInView:block_self.view WithText:@"取消订单成功" andDelay:LOADING_TIME];
                 //[self leftBtnAction:nil];
                 //从堆栈中移除ViewController
-                for (int i = 0; i < 2; i++) {
-                    [selfVC.navigationController popViewControllerAnimated:NO];
-                }
+//                for (int i = 0; i < 2; i++) {
+//                    [selfVC.navigationController popViewControllerAnimated:NO];
+//                }
+                [self.navigationController popViewControllerAnimated:NO];
                 
                 UnpayViewController *unpayVC = [UnpayViewController shareInstance];
                 [unpayVC setHidesBottomBarWhenPushed:YES];
+                
                 [selfVC.navigationController pushViewController:unpayVC animated:YES];
+                
+                
             }else{
                 NSLog(@"errorMsg: %@",rqDic[HTTP_MSG]);
                 [self showHUDInView:block_self.view WithText:rqDic[HTTP_MSG] andDelay:LOADING_TIME];

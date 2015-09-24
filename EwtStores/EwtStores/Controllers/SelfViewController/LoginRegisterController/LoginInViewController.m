@@ -367,7 +367,7 @@
                 if([rqDic[HTTP_STATE] boolValue]){
                     NSArray *dataArr = (NSArray *)[rqDic[HTTP_DATA] objectFromJSONString];
                     NSDictionary *dic = (NSDictionary *)dataArr;
-            
+                    UserObj *oldUser = [GlobalMethod getObjectForKey:USEROBJECT];
                     UserObj *user = [[UserObj alloc] init];
                     [user setUserName:dic[@"Mobile"]];
                     [user setPassword:password];
@@ -383,6 +383,7 @@
                     [user setEmailState:[dic[@"EmailState"] boolValue]];
                     [user setPhoneState:[dic[@"MobileState"] boolValue]];
                     [user setRegTime:dic[@"RegDateTime"]];
+                    [user setAtLogin:oldUser.atLogin];
                     [GlobalMethod saveObject:user withKey:USEROBJECT];
                     
                     

@@ -72,6 +72,8 @@
 #define DELETE_PRODCT_FROM_CART     @"/userShopCars/Delete/"                    //将商品从购物车删除 （可以多个删除）
 #define SUBMIT_PRODUCT              @"/UserShopCars/updatecount/"               //将商品提交 (可以多个提交)
 #define SUBMIT_ORDER                @"/orders/add/"                             //下订单
+#define ISSUPPORT_HDFK              @"/UserDelivery/IsSupportHDFK/"
+                                      //是否支持货到付款
 #define COUPONS_LIST                @"/userCoupons/list/"                       //优惠券列表
 #define COUPONS_check               @"/userCoupons/check/"                     //（添加/使用优惠券）
 #define BILL_LIST_INFO              @"/userInvoice/list/"                       //发票信息列表
@@ -116,6 +118,9 @@
 
 //帮助中心
 #define HELP_CENTER                 @"/articles/helpcenter/"                    //帮助中心
+
+//用户协议 id = 071608  关于 id = 071609
+#define WEBVIEW_HTML                @"/articles/info/"
 
 //意见反馈
 #define FEEDBACK                    @"/feedBacks/add/"                          //意见反馈

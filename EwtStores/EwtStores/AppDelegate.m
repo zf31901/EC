@@ -242,24 +242,29 @@
     [self.tabBarC setDelegate:self];
     [self.tabBarC.tabBar setBackgroundImage:[UIImage imageNamed:@"Tabbar_Bg"]];
     [self.window setRootViewController:self.tabBarC];
-    
     [self.window setBackgroundColor:RGBS(0)];
     [self.window makeKeyAndVisible];
+    
+    UserObj *oldUser = [GlobalMethod getObjectForKey:USEROBJECT];
+    if (!oldUser.atLogin) {
+        [oldUser setIsLogin:NO];
+        [GlobalMethod saveObject:oldUser withKey:USEROBJECT];
+    }
     
 //    if( ![[GlobalMethod getObjectForKey:ISFIRST_COMING] boolValue] ){
 //        [self loadWelcomeView];
 //    }
     
-    NSString *urlStr = @"https://my.ewt.cc/Tool/Html%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF/301.html";
-    
-    [MobClick startWithAppkey:@"52e1cbd656240b5a2209d810" reportPolicy:SEND_ON_EXIT channelId:nil];
-    [MobClick setLogEnabled:YES];
-    [UMSocialData setAppKey:@"52e1cbd656240b5a2209d810"];
-    [UMSocialConfig setWXAppId:@"wxf03b8f85ab54aae1" url:urlStr];
-    
-    //需要#import <TencentOpenAPI/QQApiInterface.h>  #import <TencentOpenAPI/TencentOAuth.h>
-    //设置手机QQ的AppId，url传nil，将使用友盟的网址
-    [UMSocialConfig setQQAppId:@"101022908" url:urlStr importClasses:@[[QQApiInterface class],[TencentOAuth class]]];
+//    NSString *urlStr = @"https://my.ewt.cc/Tool/Html%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF/301.html";
+//    
+//    [MobClick startWithAppkey:@"52e1cbd656240b5a2209d810" reportPolicy:SEND_ON_EXIT channelId:nil];
+//    [MobClick setLogEnabled:YES];
+//    [UMSocialData setAppKey:@"52e1cbd656240b5a2209d810"];
+//    [UMSocialConfig setWXAppId:@"wxf03b8f85ab54aae1" url:urlStr];
+//    
+//    //需要#import <TencentOpenAPI/QQApiInterface.h>  #import <TencentOpenAPI/TencentOAuth.h>
+//    //设置手机QQ的AppId，url传nil，将使用友盟的网址
+//    [UMSocialConfig setQQAppId:@"101022908" url:urlStr importClasses:@[[QQApiInterface class],[TencentOAuth class]]];
     
     return YES;
 }
@@ -324,7 +329,7 @@
         [self connectSocket];
     }*/
     
-    [UMSocialSnsService  applicationDidBecomeActive];
+    //[UMSocialSnsService  applicationDidBecomeActive];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -366,17 +371,17 @@
     }
 }
 
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
-{
-    return  [UMSocialSnsService handleOpenURL:url wxApiDelegate:nil];
-}
-
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation
-{
-    return  [UMSocialSnsService handleOpenURL:url wxApiDelegate:nil];
-}
+//- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+//{
+//    return  [UMSocialSnsService handleOpenURL:url wxApiDelegate:nil];
+//}
+//
+//- (BOOL)application:(UIApplication *)application
+//            openURL:(NSURL *)url
+//  sourceApplication:(NSString *)sourceApplication
+//         annotation:(id)annotation
+//{
+//    return  [UMSocialSnsService handleOpenURL:url wxApiDelegate:nil];
+//}
 
 @end

@@ -56,7 +56,7 @@
 {
     [aCoder encodeObject:self.userName forKey:USERNAME];
     [aCoder encodeObject:self.password forKey:PASSWORD];
-    [aCoder encodeBool:self.isAtLogin  forKey:ATLOGIN];
+    [aCoder encodeBool:self.atLogin  forKey:ATLOGIN];
     [aCoder encodeBool:self.isLogin    forKey:ISLOGIN];
     [aCoder encodeObject:self.im       forKey:IM];
     [aCoder encodeObject:self.phone    forKey:PHONE];

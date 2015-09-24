@@ -22,6 +22,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "UUPViewController.h"
+#import "AlipayViewController.h"
 
 SettleViewController *settleVC;
 
@@ -50,6 +51,7 @@ extern CartViewController *cartVC;
     UILabel     *totalPriceLb;
     UILabel     *priceLb3;      //优惠券lb
     UILabel     *couponeLb;     //优惠券cell上的lb
+    UILabel     *priceLb2;    //运输费lb
     
     BOOL        hasDefaultAddress;      //是否有默认地址
 }
@@ -80,6 +82,7 @@ extern CartViewController *cartVC;
     self.billContent = @"明细";
     self.billId = @"";
     self.shouldNotif = @"1";
+    self.UOFreight = 0.00;
     
     [self buildBaseView];
     
@@ -109,7 +112,7 @@ extern CartViewController *cartVC;
         [couponeLb setText:[NSString stringWithFormat:@"¥ %0.2f 元",self.couponPrice.floatValue]];
     }
     [priceLb3 setText:[NSString stringWithFormat:@"- ¥ %0.2f 元",self.couponPrice.floatValue]];
-    [totalPriceLb setText:[NSString stringWithFormat:@"%0.2f 元",totalPrice - self.couponPrice.floatValue]];
+    [totalPriceLb setText:[NSString stringWithFormat:@"%0.2f 元",totalPrice - self.couponPrice.floatValue + self.UOFreight]];
 }
 
 - (void)leftBtnAction:(UIButton *)btn{
@@ -126,7 +129,16 @@ extern CartViewController *cartVC;
     [self showHUDInView:self.view WithText:NETWORKLOADING];
     HTTPRequest *hq = [HTTPRequest shareInstance];
     BLOCK_SELF(SettleViewController);
-    NSDictionary *dic = @{@"userlogin" : user.im?user.im:@""};
+    NSMutableString *submitString = [NSMutableString new];
+    for (int i=0; i<self.productObjArr.count; i++) {
+        ProductObj *obj = self.productObjArr[i];
+        if (i == 0) {
+            [submitString appendFormat:@"%d",obj.productId.intValue];
+        }else{
+            [submitString appendFormat:@",%d",obj.productId.intValue];
+        }
+    }
+    NSDictionary *dic = @{@"userlogin" : user.im?user.im:@"",@"productid":submitString};
     [hq GETURLString:ADDRESS_LIST userCache:NO parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObj) {
         NSDictionary *rqDic = (NSDictionary *)responseObj;
         if([rqDic[HTTP_STATE] boolValue]){
@@ -150,12 +162,15 @@ extern CartViewController *cartVC;
                         [selectAddress setPostalCode:dic[@"URA_Post"]];
                         [selectAddress setPhoneNum:dic[@"URA_Mobile"]];
                         [selectAddress setIsChoiceAddress:[dic[@"URA_IsDefault"] boolValue]];
+                        [self setUOFreight:[dic[@"URA_Freight"] floatValue]];
                         
                         [userNameLb setText:[NSString stringWithFormat:@"收件人  %@",selectAddress.addressName]];
                         [phoneLb setText:selectAddress.phoneNum];
                         [areaLb setText:selectAddress.addressArea];
                         [detailLb setText:selectAddress.addressDetail];
                         
+                        [priceLb2 setText:[NSString stringWithFormat:@"+ ¥ %0.2f元",self.UOFreight]];
+                        [totalPriceLb setText:[NSString stringWithFormat:@"%0.2f 元",totalPrice - self.couponPrice.floatValue + self.UOFreight]];
                         hasDefaultAddress = YES;
                     }
                 }
@@ -193,7 +208,15 @@ extern CartViewController *cartVC;
         }else{
             NSLog(@"errorMsg: %@",rqDic[HTTP_MSG]);
             [self hideHUDInView:block_self.view];
-            [self showHUDInView:block_self.view WithText:rqDic[HTTP_MSG] andDelay:LOADING_TIME];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"温馨提示"
+                                                                message:@"您还没有收货地址，是否立即新建？"
+                                                               delegate:self
+                                                      cancelButtonTitle:@"取消"
+                                                      otherButtonTitles:@"新建地址", nil];
+            alertView.tag = 1003;
+            [alertView show];
+
+            //[self showHUDInView:block_self.view WithText:rqDic[HTTP_MSG] andDelay:LOADING_TIME];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [self hideHUDInView:block_self.view];
@@ -306,9 +329,9 @@ extern CartViewController *cartVC;
                                                 withText:@"运输费"];
     [footerView1 addSubview:transLb];
     
-    UILabel *priceLb2 = [GlobalMethod BuildLableWithFrame:CGRectMake(transLb.right + 10, transLb.top, 180, 13)
+    priceLb2 = [GlobalMethod BuildLableWithFrame:CGRectMake(transLb.right + 10, transLb.top, 180, 13)
                                                  withFont:[UIFont systemFontOfSize:12]
-                                                 withText:@"+ ¥ 0.0元"];
+                                                 withText:[NSString stringWithFormat:@"+ ¥ %0.2f元",self.UOFreight]];
     [priceLb2 setTextAlignment:NSTextAlignmentRight];
     [priceLb2 setTextColor:[UIColor redColor]];
     [footerView1 addSubview:priceLb2];
@@ -495,6 +518,7 @@ extern CartViewController *cartVC;
         {
             DelivementViewController *delivetVC = [DelivementViewController shareInstance];
             [delivetVC setDevideType:self.devideType];
+            [delivetVC setFreight:self.UOFreight];
             [self.navigationController pushViewController:delivetVC animated:YES];
         }
             
@@ -548,7 +572,7 @@ extern CartViewController *cartVC;
     if(string.length == 0){      //点击了删除键
         return YES;
     }
-    
+
     if(textField.text.length >= 50){
         return NO;
     }
@@ -612,27 +636,106 @@ extern CartViewController *cartVC;
 
 
 - (void)submitOrder{
-    [MobClick event:MSZF];
     
-    BOOL isShenzhenArea = NO;
-    if([self.purchaseType isEqualToString:@"货到付款"]){
-        NSArray *area = [selectAddress.addressArea componentsSeparatedByString:@" "];
-        for(NSString *address in area){
-            if([address isEqualToString:@"深圳"]){
-                isShenzhenArea = YES;
-            }
-        }
-        
-        if(!isShenzhenArea){
-            [[[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"你选择的地区无法货到付款，请重新选择" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil] show];
-            return ;
-        }
+    if(remarkTF.text.length >= 50){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"订单备注请不要超过50字符" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil];
+        [alert show];
+        return;
     }
+    
+    [MobClick event:MSZF];
     
     UserObj *user = [GlobalMethod getObjectForKey:USEROBJECT];
     
     BLOCK_SELF(SettleViewController);
     HTTPRequest *hq = [HTTPRequest shareInstance];
+    
+    
+    //货到付款
+    if([self.purchaseType isEqualToString:@"货到付款"]){
+        NSDictionary *parameter = @{@"userlogin" : user.im?user.im:@"",@"clientkey":user.clientkey};
+        [self showHUDInView:self.view WithText:NETWORKLOADING];
+        [hq POSTURLString:ISSUPPORT_HDFK parameters:parameter success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSDictionary *rqDic = (NSDictionary *)responseObject;
+            if([rqDic[HTTP_STATE] boolValue]){
+                NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:10];
+                [dic setObject:user.clientkey               forKey:@"clientkey"];
+                [dic setObject:user.im                      forKey:@"UserLogin"];
+                [dic setObject:selectAddress.addressId?selectAddress.addressId : @""      forKey:@"RecAddressID"];
+                [dic setObject:[NSNumber numberWithInt:1]   forKey:@"DeliveryType"];
+                [dic setObject:self.shouldNotif             forKey:@"RecGiveNotice"];
+                [dic setObject:self.billId                  forKey:@"Invoiceid"];
+                [dic setObject:remarkTF.text                forKey:@"Remark"];
+                [dic setObject:self.couponID?self.couponID : @""             forKey:@"Coupons"];
+                
+                NSMutableString *submitString = [NSMutableString new];
+                for (int i=0; i<self.productObjArr.count; i++) {
+                    ProductObj *obj = self.productObjArr[i];
+                    if (i == 0) {
+                        [submitString appendFormat:@"%d",obj.productId.intValue];
+                    }else{
+                        [submitString appendFormat:@",%d",obj.productId.intValue];
+                    }
+                }
+                
+                [dic setObject:submitString forKey:@"productid"];
+                
+                [hq POSTURLString:SUBMIT_ORDER  withTimeout:40 parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                    NSDictionary *rqDic = (NSDictionary *)responseObject;
+                    if([rqDic[HTTP_STATE] boolValue]){
+                        
+                        NSDictionary *dataDic = (NSDictionary *)[rqDic[HTTP_DATA] objectFromJSONString];
+                        if([dataDic[@"result"] boolValue]){
+                            
+                            //提交成功，购物车商品数变化
+                            int totalNum = [[GlobalMethod getObjectForKey:CART_PRODUCT_COUNT] intValue];
+                            
+                            for(int i=0; i<self.productObjArr.count; i++){
+                                ProductObj *obj = (ProductObj *)self.productObjArr[i];
+                                totalNum = totalNum - obj.number.intValue;
+                            }
+                            
+                            [GlobalMethod saveObject:[NSString stringWithFormat:@"%d",totalNum] withKey:CART_PRODUCT_COUNT];
+                            UIAlertView *unpayAView = [[UIAlertView alloc] initWithTitle:@"提交订单成功"
+                                                                                 message:nil
+                                                                                delegate:self
+                                                                       cancelButtonTitle:@"再逛逛"
+                                                                       otherButtonTitles:@"查看订单", nil];
+                            [unpayAView setTag:10004];
+                            [unpayAView show];
+                            
+                            
+                        }
+                    }else{
+                        NSLog(@"errorMsg: %@",rqDic[HTTP_MSG]);
+                        
+                        [self hideHUDInView:block_self.view];
+                        [self showHUDInView:block_self.view WithText:rqDic[HTTP_MSG] andDelay:LOADING_TIME];
+                    }
+                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                    DLog(@"%@",error);
+                    
+                    [self hideHUDInView:block_self.view];
+                    [self showHUDInView:block_self.view WithText:NETWORKERROR andDelay:LOADING_TIME];
+                }];
+                
+                cartVC.isSubmitSuccess = YES;
+            }else{
+                [self hideHUDInView:block_self.view];
+                [[[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"你选择的地区无法货到付款，请重新选择" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil] show];
+            }
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@",[error description]);
+            [self hideHUDInView:block_self.view];
+            [self showHUDInView:block_self.view WithText:NETWORKERROR andDelay:LOADING_TIME];
+        }];
+        return;
+    }
+  
+    
+    
+    
+    //支付宝支付
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:10];
     [dic setObject:user.clientkey               forKey:@"clientkey"];
     [dic setObject:user.im                      forKey:@"UserLogin"];
@@ -642,7 +745,7 @@ extern CartViewController *cartVC;
     [dic setObject:self.billId                  forKey:@"Invoiceid"];
     [dic setObject:remarkTF.text                forKey:@"Remark"];
     [dic setObject:self.couponID?self.couponID : @""             forKey:@"Coupons"];
-    
+
     NSMutableString *submitString = [NSMutableString new];
     for (int i=0; i<self.productObjArr.count; i++) {
         ProductObj *obj = self.productObjArr[i];
@@ -654,7 +757,7 @@ extern CartViewController *cartVC;
     }
     
     [dic setObject:submitString forKey:@"productid"];
-    
+    NSLog(@"%@",dic);
     [self showHUDInView:self.view WithText:NETWORKLOADING];
     [hq POSTURLString:SUBMIT_ORDER  withTimeout:40 parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary *rqDic = (NSDictionary *)responseObject;
@@ -687,10 +790,28 @@ extern CartViewController *cartVC;
                     
                 }else{
                     //跳至银联支付
-                    UUPViewController *uupVC = [UUPViewController shareInstance];
-                    [uupVC setTNString:dataDic[@"payserial"]];
-                    [uupVC setOrderSerial:dataDic[@"orderserial"]];
-                    [self.navigationController pushViewController:uupVC animated:NO];
+//                    UUPViewController *uupVC = [UUPViewController shareInstance];
+//                    [uupVC setTNString:dataDic[@"payserial"]];
+//                    [uupVC setOrderSerial:dataDic[@"orderserial"]];
+//                    [self.navigationController pushViewController:uupVC animated:NO];
+                    if ([dataDic[@"totalamount"] floatValue] > 0) {
+                        //支付宝
+                        AlipayViewController *alipayVC = [[AlipayViewController alloc] init];
+                        alipayVC.alipayOrder.tradeNO = dataDic[@"orderserial"];
+                        alipayVC.alipayOrder.productName = dataDic[@"productname"];
+                        alipayVC.alipayOrder.productDescription = @"爱心天地商品"; //商品描述
+                        alipayVC.alipayOrder.amount = dataDic[@"totalamount"]; //商品价格
+                        [self.navigationController pushViewController:alipayVC animated:YES];
+                        [self hideHUDInView:block_self.view];
+                    }else{
+                        UIAlertView *unpayAView = [[UIAlertView alloc] initWithTitle:@"提交订单成功"
+                                                                             message:nil
+                                                                            delegate:self
+                                                                   cancelButtonTitle:@"再逛逛"
+                                                                   otherButtonTitles:nil, nil];
+                        unpayAView.tag = 10004;
+                        [unpayAView show];
+                    }
                 }
             }
         }else{

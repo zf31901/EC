@@ -44,7 +44,6 @@
     
     [self showHUDInView:self.view WithText:NETWORKLOADING];
     [self loadDataSource];
-    
     [MobClick event:EJLM];
 }
 
@@ -58,17 +57,20 @@
     BLOCK_SELF(ProductCategoryViewController);
     HTTPRequest *hq = [HTTPRequest shareInstance];
     NSDictionary *dic = [NSDictionary dictionaryWithObject:self.cpId?self.cpId:@"" forKey:@"catecode"];
-    [hq GETURLString:FIRST_PRODUCT_CATEGORY parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObj) {
+    [hq GETURLString:FIRST_PRODUCT_CATEGORY userCache:NO parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObj) {
         NSDictionary *rqDic = (NSDictionary *)responseObj;
         if([rqDic[HTTP_STATE] boolValue]){
             
             NSArray *dataArr = (NSArray *)[rqDic[HTTP_DATA] objectFromJSONString];
+            if (dataArr.count == 0 || dataArr == nil) {
+                [self hideHUDInView:block_self.view];
+            }
             for(int i=0; i<dataArr.count; i++){
                 NSDictionary *parentDic = dataArr[i];
                 
                 NSDictionary *dic = [NSDictionary dictionaryWithObject:parentDic[@"CId"]?parentDic[@"CId"]:@"" forKey:@"catecode"];
                 HTTPRequest *hq = [HTTPRequest shareInstance];
-                [hq GETURLString:FIRST_PRODUCT_CATEGORY parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObj) {
+                [hq GETURLString:FIRST_PRODUCT_CATEGORY userCache:NO parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObj) {
                     NSDictionary *rqDic = (NSDictionary *)responseObj;
                     if([rqDic[HTTP_STATE] boolValue]){
                         
@@ -176,7 +178,7 @@
 {
     selectObj = (RADataObject *)item;
     
-    if(selectObj.children==nil || selectObj.children.count==0){
+    if(selectObj.children==nil){
         DLog(@"进入物品详情");
         
         ProductSortViewController *proSVC = [ProductSortViewController shareInstance];
@@ -188,12 +190,16 @@
     
     UITableViewCell *cell = [treeView cellForItem:item];
     UIImageView *statusIV = (UIImageView *)[cell.contentView viewWithTag:10001];
-    if (treeNodeInfo.expanded) {
-        [statusIV setImage:[UIImage imageNamed:@"accsessory-arrow-down"]];
-    }else{
+    if ([statusIV.image isEqual:[UIImage imageNamed:@"accsessory-arrow-down"]]) {
         [statusIV setImage:[UIImage imageNamed:@"accsessory-arrow-up"]];
+    }else{
+        [statusIV setImage:[UIImage imageNamed:@"accsessory-arrow-down"]];
     }
-    
+//    if (treeNodeInfo.expanded) {
+//        [statusIV setImage:[UIImage imageNamed:@"accsessory-arrow-down"]];
+//    }else{
+//        [statusIV setImage:[UIImage imageNamed:@"accsessory-arrow-up"]];
+//    }
     //三级类目 纪录
     [MobClick event:SJLM];
 }
@@ -276,6 +282,7 @@
 {
     return 0.0001;
 }
+
 
 - (void)didReceiveMemoryWarning
 {

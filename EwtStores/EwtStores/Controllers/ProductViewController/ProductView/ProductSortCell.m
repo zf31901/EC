@@ -78,15 +78,23 @@
     [self.proNameLb         setText:obj.name];
     
     NSString *saleString = [NSString stringWithFormat:@"¥ %0.2f",[obj.salePrice floatValue]];
-    CGSize size = [saleString sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(320, 999) lineBreakMode:NSLineBreakByWordWrapping];
+    CGRect titleRect = [saleString boundingRectWithSize:CGSizeMake(Main_Size.width, 2000) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:15] forKey:NSFontAttributeName] context:nil];
+    CGSize size = CGSizeMake(titleRect.size
+                             .width, titleRect.size
+                             .height);
     [self.proSalePriceLb    setFrame:CGRectMake(self.proSalePriceLb.left, self.proSalePriceLb.top, size.width, 16)];
     [self.proSalePriceLb    setText:saleString];
-
+    [self.proSalePriceLb setFont:[UIFont systemFontOfSize:15]];
+    
     NSString *oldString = [NSString stringWithFormat:@"¥ %0.2f",[obj.oldPrice floatValue]];
-    CGSize size2 = [oldString sizeWithFont:[UIFont systemFontOfSize:11] constrainedToSize:CGSizeMake(320, 999) lineBreakMode:NSLineBreakByWordWrapping];
+    CGRect titleRect2 = [oldString boundingRectWithSize:CGSizeMake(Main_Size.width, 2000) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:11] forKey:NSFontAttributeName] context:nil];
+    CGSize size2 = CGSizeMake(titleRect2.size
+                              .width, titleRect2.size
+                              .height);
     [self.proOldPriceLb     setFrame:CGRectMake(self.proSalePriceLb.right + 10, self.proOldPriceLb.top, size2.width, size2.height)];
     [self.proOldPriceLb     setText:oldString];
     [self.oldLineLb         setFrame:CGRectMake(self.proOldPriceLb.left, self.oldLineLb.top, size2.width, 0.5)];
+    [self.proOldPriceLb setFont:[UIFont systemFontOfSize:11]];
     
     [self.saleMonthNumLb    setText:[NSString stringWithFormat:@"月销售：%@件",obj.saleMonthNum]];
     [self.starNumLb         setText:[NSString stringWithFormat:@"评价：%@条",obj.totalComment]];

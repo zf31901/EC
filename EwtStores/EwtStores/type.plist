@@ -115,8 +115,8 @@
 	<dict>
 		<key>payType_1</key>
 		<string>货到付款</string>
-		<key>payType_2</key>
-		<string>银联手机支付</string>
+		<key>payType_11</key>
+		<string>支付宝</string>
 	</dict>
 </dict>
 </plist>

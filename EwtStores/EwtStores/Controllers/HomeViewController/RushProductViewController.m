@@ -108,16 +108,16 @@ static const float headView_height = 0.0f;
                 [rushProArr addObject:obj];
             }
             
-            if(rushProArr.count % 2 == 1){  //当收到的数据个数为奇数时，删去最后一个
-                [rushProArr removeLastObject];
-            }
+//            if(rushProArr.count % 2 == 1){  //当收到的数据个数为奇数时，删去最后一个
+//                [rushProArr removeLastObject];
+//            }
             
             [self.mainTableView reloadData];
             [self finishReloadingData];
             
         }else{
             NSLog(@"errorMsg: %@",rqDic[HTTP_MSG]);
-            [self showHUDInView:block_self.view WithText:rqDic[HTTP_MSG] andDelay:LOADING_TIME];
+            //[self showHUDInView:block_self.view WithText:rqDic[HTTP_MSG] andDelay:LOADING_TIME];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@ , %@",operation,error);

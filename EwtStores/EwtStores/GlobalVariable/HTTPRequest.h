@@ -36,19 +36,22 @@
  
  **/
 
-//#define OfficialEnvironment
+#define OfficialEnvironment
 
 #ifdef OfficialEnvironment
 #define BaseDemain          @"http://ecapi.aixinland.cn"
 #define MemberBaseDemain    @"http://myapi.aixinland.cn"
 #define ApiKey              @"800000001"
 #define MemberApikey        @"900000001"
+//#define NotifyUrl           @"http://ec.aixinland.cn/webaspxpage/alipay/app_notify_url.aspx"
+#define NotifyUrl           @"http://lan.ecmall.ewt.cc/webaspxpage/alipay/app_notify_url.aspx"
 //#define UUPAY_CODE          @"00"       //正式环境
 #else
 #define BaseDemain          @"http://bhapi.ewt.cc"
 #define MemberBaseDemain    @"http://myapi.ewt.cc"
 #define ApiKey              @"100000001"
 #define MemberApikey        @"100000001"
+#define NotifyUrl           @"http://ec.aixinland.cn/webaspxpage/alipay/app_notify_url.aspx"
 //#define UUPAY_CODE          @"01"       //开发环境
 #endif
 

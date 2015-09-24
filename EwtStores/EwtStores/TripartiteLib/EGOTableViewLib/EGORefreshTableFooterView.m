@@ -146,7 +146,7 @@
 			_statusLabel.text = NSLocalizedString(@"上拉追加", @"Pull up to load more");
 			[_activityView stopAnimating];
 			[CATransaction begin];
-			[CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions]; 
+			[CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
 			_arrowImage.hidden = NO;
 			//_arrowImage.transform = CATransform3DIdentity;
             _arrowImage.transform = CATransform3DMakeRotation((M_PI / 180.0) * 180.0f, 0.0f, 0.0f, 1.0f);
@@ -239,7 +239,7 @@
 	[UIView setAnimationDuration:.3];
 	[scrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
 	[UIView commitAnimations];
-	
+    
 	[self setState:EGOOPullRefreshNormal];
 
 }

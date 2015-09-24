@@ -121,7 +121,7 @@ static const float headView_height = 0.0f;
     NSMutableDictionary *sDic = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                  [NSString stringWithFormat:@"%ld",(long)currentPage],@"page",
                                  @"8",@"pagesize",nil];
-    [hq GETURLString:product_api parameters:sDic success:^(AFHTTPRequestOperation *operation, id responseObj) {
+    [hq GETURLString:product_api userCache:NO parameters:sDic success:^(AFHTTPRequestOperation *operation, id responseObj) {
         NSDictionary *rqDic = (NSDictionary *)responseObj;
         if([rqDic[HTTP_STATE] boolValue]){
             

@@ -24,5 +24,6 @@
 @property (nonatomic, strong) NSString  *couponID;          //优惠券的编号
 
 @property (nonatomic, strong) NSArray   *productObjArr;     //购物车中的商品
+@property (nonatomic, assign) CGFloat   UOFreight;          //运费
 
 @end

@@ -13,7 +13,7 @@
 #import "HTTPRequest.h"
 #import "JSONKit.h"
 #import "EGOImageView.h"
-
+#import "UserObj.h"
 #import "ProductCategory.h"
 #import "UIImageView+WebCache.h"
 #import "ProductTableViewCell.h"
@@ -53,18 +53,15 @@
     
     [MobClick event:YJLM];
     
-//    //如果没有分类数据，先判断是否有缓存数据，如果也没有，那么每次进入该界面请求服务器
-//    if(productNameArr.count == 0){
-//        [self loadDataSource];
-//    }
+    [self loadDataSource];
     
     [searchDC setActive:NO];
-    
+    UserObj *user = [GlobalMethod getObjectForKey:USEROBJECT];
     NSArray *VCArr = MYAPPDELEGATE.tabBarC.viewControllers;
     if(VCArr.count >= 3){
         UINavigationController *cartVC = VCArr[2];
         NSString *cart_product_num = [GlobalMethod getObjectForKey:CART_PRODUCT_COUNT];
-        if([cart_product_num integerValue] == 0){
+        if([cart_product_num integerValue] == 0 || !user.isLogin){
             cartVC.tabBarItem.badgeValue = nil;
         }else{
             cartVC.tabBarItem.badgeValue = cart_product_num;
@@ -84,7 +81,7 @@
     BLOCK_SELF(ProductViewController);
     HTTPRequest *hq = [HTTPRequest shareInstance];
     NSDictionary *dic = [NSDictionary dictionaryWithObject:@"00" forKey:@"catecode"];
-    [hq GETURLString:FIRST_PRODUCT_CATEGORY parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObj) {
+    [hq GETURLString:FIRST_PRODUCT_CATEGORY userCache:NO parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObj) {
         NSDictionary *rqDic = (NSDictionary *)responseObj;
         if([rqDic[HTTP_STATE] boolValue]){
             
@@ -281,7 +278,7 @@
 - (void) searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
 {
     searchDC.searchBar.tintColor = [UIColor whiteColor];
-    
+    searchDC.searchResultsTableView.hidden = NO;
     //点击搜索，读取历史搜索纪录
     [searchArr removeAllObjects];
     if([GlobalMethod getObjectForKey:HISTORYARR] != nil){
@@ -340,6 +337,12 @@
     }
     
     return YES;
+}
+
+#pragma mark EgoTableView Method
+- (void)refreshView
+{
+    [self loadDataSource];
 }
 
 - (void)didReceiveMemoryWarning

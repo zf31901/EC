@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "HarryButton.h"
 #import "EGOImageView.h"
 @class ProductObj;
 
@@ -26,7 +26,7 @@
 @property (nonatomic, strong) UIView        *rightView;
 
 @property (nonatomic, strong) UILabel       *priceLb;
-@property (nonatomic, strong) UIButton      *statusBt;
+@property (nonatomic, strong) HarryButton   *statusBt;
 @property (nonatomic, strong) UIButton      *editBt;
 @property (nonatomic, strong) EGOImageView  *productImgView;
 @property (nonatomic, strong) UILabel       *nameLb;

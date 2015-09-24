@@ -57,7 +57,7 @@
     [self.view addSubview:bgView];
     
     phoneNumTF = [GlobalMethod BuildTextFieldWithFrame:CGRectMake(10, 10, 280, 28)
-                                                     andPlaceholder:@"请输入会员号/手机号码"];
+                                                     andPlaceholder:@"请输入手机号码"];
     [phoneNumTF setDelegate:self];
     [phoneNumTF setKeyboardType:UIKeyboardTypeNumberPad];
     [bgView addSubview:phoneNumTF];
@@ -81,10 +81,14 @@
         registerACC.secondNum = 60;
         
         BLOCK_SELF(FindPasswordViewController);
+        [self showHUDInView:self.view WithText:@"正在验证手机"];
+        nextBtn.userInteractionEnabled = NO;
         HTTPRequest *hq = [HTTPRequest shareInstance_myapi];
         
         [hq GETURLString:FINDPWD_SEND parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSDictionary *rqDic = (NSDictionary *)responseObject;
+            [self hideHUDInView:self.view];
+            nextBtn.userInteractionEnabled = YES;
             if([rqDic[HTTP_STATE] boolValue]){
                 NSArray *dataArr = (NSArray *)[rqDic[HTTP_DATA] objectFromJSONString];
                 NSDictionary *dic = (NSDictionary *)dataArr;
@@ -102,6 +106,8 @@
             }
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@ , %@",operation,error);
+            [self hideHUDInView:self.view];
+            nextBtn.userInteractionEnabled = YES;
             [self showHUDInView:block_self.view WithText:@"网络请求失败" andDelay:LOADING_TIME];
         }];
     } else {

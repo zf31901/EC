@@ -11,5 +11,6 @@
 @interface DelivementViewController : BaseViewController <UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic, strong) NSString  *devideType;        //运输方式
+@property (nonatomic, assign) CGFloat   freight;            //运费
 
 @end

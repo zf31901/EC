@@ -359,19 +359,29 @@
     if(nameTF.text.length == 0){
         [self showHUDInView:self.view WithText:@"请输入姓名" andDelay:LOADING_TIME];
         return NO;
+    }else if (nameTF.text.length > 10){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"姓名不要超过10个字符" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil];
+        [alert show];
+        return NO;
     }
     
     if(phoneTF.text.length == 0){
         [self showHUDInView:self.view WithText:@"请输入手机号码" andDelay:LOADING_TIME];
         return NO;
     }else{
-        NSString *regex = @"^((13[0-9])|(147)|(15[^4,\\D])|(18[0,5-9]))\\d{8}$";
+        NSString *regex = @"^((13[0-9])|(147)|(15[^4,\\D])|(17[6-8])|(18[0-9]))\\d{8}$";
         NSPredicate *pred = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
         BOOL isMatch = [pred evaluateWithObject:phoneTF.text];
         if( !isMatch ){
             [self showHUDInView:self.view WithText:@"请输入正确的手机号码" andDelay:LOADING_TIME];
             return NO;
         }
+    }
+    
+    if(detailTF.text.length > 20){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"详细地址不要超过20个字符" delegate:nil cancelButtonTitle:@"知道了"otherButtonTitles:nil];
+        [alert show];
+        return NO;
     }
     
 //    if(emailTF.text.length == 0){
